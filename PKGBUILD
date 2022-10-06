@@ -2,8 +2,8 @@
 # Contributor: Michael Duncan Hammond <mhammond9@radford.edu>
 
 
-pkgname=cisco-anyconnect
-pkgver=4.10.04065
+pkgname=cisco-secureclient
+pkgver=5.0.00556
 pkgrel=1
 pkgdesc='Cisco AnyConnect Secure Mobility Client'
 url='https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html'
@@ -23,21 +23,21 @@ options=('!strip')
 
 # you will have to obtain the installer yourself - it's not available publicly
 source=(
-"anyconnect-linux64-4.10.04065-predeploy-k9.tar.gz::https://uci.service-now.com/sys_attachment.do?sys_id=1507c0cc1b200dd44d61baeedc4bcbe9"
-"${pkgname}.sh" 
+"cisco-secure-client-linux64-5.0.00556-predeploy-k9.tar.gz::file:///$HOME/work/cisco-secure-client-linux64-5.0.00556-predeploy-k9.tar.gz"
+"${pkgname}.sh"
 "AnyConnectLocalPolicy.xml"
 )
 
-sha256sums=('c88c32c39c9160aa76cb54a51871dda963c3afbbf427a1514a15e5199dd9b56a'
-            '200ab27674568ac32b939c02bba051f90cf59d6ca087746a1e54c5a7ac207dbc'
+sha256sums=('0e755bad9525bee90215786db2c2d099ad441921d7bf3b758b811302483b17f5'
+            'd29746d526ae87d011a1b988531d72a1b0da018872f22b3dd8ebd2fc2082bda2'
             'b7c65a236e671d3eb527a3377e22b66018c450d726f71fa6344530a75255dac7')
 
 package() {
-    cd "${srcdir}/anyconnect-linux64-${pkgver}/vpn"
+    cd "${srcdir}/cisco-secure-client-linux64-${pkgver}/vpn"
 
     # install binaries
     for binary in "vpnagentd" "vpn" "vpndownloader" "vpndownloader-cli" "manifesttool_vpn" "acinstallhelper" "vpnui" "acwebhelper" "load_tun.sh"; do
-        install -Dm755 ${binary} "${pkgdir}/opt/cisco/anyconnect/bin/${binary}"
+        install -Dm755 ${binary} "${pkgdir}/opt/cisco/secureclient/bin/${binary}"
     done
 
     # install libs
@@ -46,36 +46,36 @@ package() {
         "cfom.so" "libboost_date_time.so" "libboost_filesystem.so" "libboost_regex.so" "libboost_system.so" \
         "libboost_thread.so" "libboost_signals.so" "libboost_chrono.so" \
         "libaccurl.so.4.7.0"; do
-        install -Dm755 ${lib} "${pkgdir}/opt/cisco/anyconnect/lib/${lib}"
+        install -Dm755 ${lib} "${pkgdir}/opt/cisco/secureclient/lib/${lib}"
     done
-#     rm -rf ${pkgdir}/opt/cisco/anyconnect/lib/libboost*
+#     rm -rf ${pkgdir}/opt/cisco/secureclient/lib/libboost*
 
     # the installer copies all the other symlinks, but creates this one
     # for some reason so let's just create it ourselves
-    ln -s /opt/cisco/anyconnect/lib/libaccurl.so.4.7.0 "${pkgdir}/opt/cisco/anyconnect/lib/libaccurl.so.4"
+    ln -s /opt/cisco/secureclient/lib/libaccurl.so.4.7.0 "${pkgdir}/opt/cisco/secureclient/lib/libaccurl.so.4"
 
     # install plugins
     # we intentionally don't install the telemetry plugin here
     # because it tries to write to /opt and we don't want that
     for plugin in "libacwebhelper.so" "libvpnipsec.so"; do
-        install -Dm755 ${plugin} "${pkgdir}/opt/cisco/anyconnect/bin/plugins/${plugin}"
+        install -Dm755 ${plugin} "${pkgdir}/opt/cisco/secureclient/bin/plugins/${plugin}"
     done
 
-    cp -R resources "${pkgdir}/opt/cisco/anyconnect/resources"
+    cp -R resources "${pkgdir}/opt/cisco/secureclient/resources"
 
     # install some misc stuff
-    install -Dm444 AnyConnectProfile.xsd "${pkgdir}/opt/cisco/anyconnect/profile/AnyConnectProfile.xsd"
+    install -Dm444 AnyConnectProfile.xsd "${pkgdir}/opt/cisco/secureclient/profile/AnyConnectProfile.xsd"
 
     for file in "ACManifestVPN.xml" "update.txt" "AnyConnectLocalPolicy.xsd"; do
-        install -Dm444 ${file} "${pkgdir}/opt/cisco/anyconnect/${file}"
+        install -Dm444 ${file} "${pkgdir}/opt/cisco/secureclient/${file}"
     done
 
     # install desktop file for vpnui
-    install -Dm644 resources/vpnui48.png "${pkgdir}/usr/share/icons/hicolor/48x48/apps/cisco-anyconnect.png"
-    install -Dm644 resources/vpnui128.png "${pkgdir}/usr/share/icons/hicolor/128x128/apps/cisco-anyconnect.png"
+    install -Dm644 resources/vpnui48.png "${pkgdir}/usr/share/icons/hicolor/48x48/apps/cisco-secureclient.png"
+    install -Dm644 resources/vpnui128.png "${pkgdir}/usr/share/icons/hicolor/128x128/apps/cisco-secureclient.png"
 
-    sed -i "s|^Exec=.*|Exec=${pkgname}|g" com.cisco.anyconnect.gui.desktop
-    install -Dm644 com.cisco.anyconnect.gui.desktop "${pkgdir}/usr/share/applications/cisco-anyconnect.desktop"
+    sed -i "s|^Exec=.*|Exec=${pkgname}|g" com.cisco.secureclient.gui.desktop
+    install -Dm644 com.cisco.secureclient.gui.desktop "${pkgdir}/usr/share/applications/cisco-secureclient.desktop"
 
     # install license
     for license in "license.txt" "OpenSource.html"; do
@@ -102,5 +102,5 @@ package() {
     #
     # this may break some really quirky setups that require downloading files from the server,
     # but there's no other way around it that I could find
-    install -Dm644 "${srcdir}/AnyConnectLocalPolicy.xml" "${pkgdir}/opt/cisco/anyconnect/AnyConnectLocalPolicy.xml"
+    install -Dm644 "${srcdir}/AnyConnectLocalPolicy.xml" "${pkgdir}/opt/cisco/secureclient/AnyConnectLocalPolicy.xml"
 }
