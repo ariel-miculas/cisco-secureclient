@@ -3,7 +3,7 @@
 
 
 pkgname=cisco-secureclient
-pkgver=5.0.00556
+pkgver=5.1.0.136
 pkgrel=1
 pkgdesc='Cisco AnyConnect Secure Mobility Client'
 url='https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html'
@@ -23,14 +23,14 @@ options=('!strip')
 
 # you will have to obtain the installer yourself - it's not available publicly
 source=(
-"cisco-secure-client-linux64-5.0.00556-predeploy-k9.tar.gz::file:///$HOME/work/cisco-secure-client-linux64-5.0.00556-predeploy-k9.tar.gz"
+"cisco-secure-client-linux64-5.1.0.136-predeploy-k9.tar.gz::file:///$HOME/work/cisco-anyconnect/cisco-secure-client-linux64-5.1.0.136-predeploy-k9.tar.gz"
 "${pkgname}.sh"
 "AnyConnectLocalPolicy.xml"
 )
 
-sha256sums=('0e755bad9525bee90215786db2c2d099ad441921d7bf3b758b811302483b17f5'
+sha256sums=('178c2f1abcdac20c70f8cd8f2957a0b33d6d00474fcc2fb1469d36a6ba3d9482'
             'd29746d526ae87d011a1b988531d72a1b0da018872f22b3dd8ebd2fc2082bda2'
-            'b7c65a236e671d3eb527a3377e22b66018c450d726f71fa6344530a75255dac7')
+            'f356c6bca23bb187e8e6c2d6504d9a0c30f7d45f6c78bef399e67a5d5079343d')
 
 package() {
     cd "${srcdir}/cisco-secure-client-linux64-${pkgver}/vpn"
@@ -44,15 +44,15 @@ package() {
     for lib in "libvpnagentutilities.so" "libvpncommon.so" "libvpncommoncrypt.so" \
         "libvpnapi.so" "libacruntime.so" "libacciscossl.so" "libacciscocrypto.so" \
         "cfom.so" "libboost_date_time.so" "libboost_filesystem.so" "libboost_regex.so" "libboost_system.so" \
-        "libboost_thread.so" "libboost_signals.so" "libboost_chrono.so" \
-        "libaccurl.so.4.7.0"; do
+        "libboost_thread.so" "libboost_atomic.so" "libboost_chrono.so" \
+        "libaccurl.so.4.8.0"; do
         install -Dm755 ${lib} "${pkgdir}/opt/cisco/secureclient/lib/${lib}"
     done
 #     rm -rf ${pkgdir}/opt/cisco/secureclient/lib/libboost*
 
     # the installer copies all the other symlinks, but creates this one
     # for some reason so let's just create it ourselves
-    ln -s /opt/cisco/secureclient/lib/libaccurl.so.4.7.0 "${pkgdir}/opt/cisco/secureclient/lib/libaccurl.so.4"
+    ln -s /opt/cisco/secureclient/lib/libaccurl.so.4.8.0 "${pkgdir}/opt/cisco/secureclient/lib/libaccurl.so.4"
 
     # install plugins
     # we intentionally don't install the telemetry plugin here

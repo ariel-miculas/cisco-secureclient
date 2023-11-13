@@ -5,5 +5,5 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemalocation="http://schemas.xmlsoap.org/encoding/ AnyConnectLocalPolicy.xsd"
 >
-    <BypassDownloader>true</BypassDownloader>
+    <BypassDownloader>false</BypassDownloader>
 </AnyConnectLocalPolicy>
